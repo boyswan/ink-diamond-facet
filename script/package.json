@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@polkadot/api": "^8.8.2",
+    "@polkadot/api-contract": "^8.8.2",
+    "@polkadot/keyring": "^9.4.1",
+    "@polkadot/util": "^9.5.1",
+    "@polkadot/util-crypto": "^9.4.1"
+  }
+}
