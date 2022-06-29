@@ -4,6 +4,12 @@
 #[openbrush::contract]
 pub mod flip {
     use ink_storage::traits::SpreadAllocate;
+
+    use ink_env::{
+        call::{DelegateCall, ExecutionInput, Selector as InkSelector},
+        Clear,
+    };
+
     use openbrush::{
         contracts::{ownable::*, psp22::*},
         modifiers,
@@ -19,7 +25,7 @@ pub mod flip {
         // flip: bool,
     }
 
-    // impl PSP22 for Flip {}
+    impl PSP22 for Flip {}
 
     impl Ownable for Flip {}
 
@@ -46,7 +52,15 @@ pub mod flip {
 
         #[ink(message)]
         pub fn get_balance_of_psp_facet(&mut self, user: AccountId) -> Balance {
-            PSP22Ref::balance_of(&Self::env().account_id(), user)
+            ink_env::debug_println!("Reached: 1");
+
+            let balance = PSP22Ref::balance_of_builder(&Self::env().account_id(), user)
+                .call_flags(ink_env::CallFlags::default().set_allow_reentry(true))
+                .fire()
+                .unwrap();
+
+            ink_env::debug_println!("Reached: 2");
+            balance
         }
     }
 }
